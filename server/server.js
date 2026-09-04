@@ -1,5 +1,10 @@
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { dbEngine } from './database.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -297,6 +302,21 @@ app.post('/api/appointments/cancel', (req, res) => {
   dbEngine.setAppointments([...appointments]);
 
   return res.json({ success: true });
+});
+
+// Serve compiled static assets from dist (Web Service deployment)
+const distPath = path.join(__dirname, '../dist');
+app.use(express.static(distPath));
+
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+  res.sendFile(path.join(distPath, 'index.html'), (err) => {
+    if (err) {
+      next();
+    }
+  });
 });
 
 // Start Server
