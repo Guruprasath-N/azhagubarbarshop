@@ -30,54 +30,18 @@ function timeToMinutes(timeStr) {
   return h * 60 + m;
 }
 
+// Serve static compiled frontend assets
+const distPath = path.join(__dirname, '../dist');
+app.use(express.static(distPath));
+
 // ----------------------------------------------------
 // 1. Health & Meta Endpoints
 // ----------------------------------------------------
-app.get('/', (req, res) => {
-  if (req.headers.accept && req.headers.accept.includes('text/html')) {
-    return res.send(`
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AZHAGU — Backend REST API</title>
-  <style>
-    body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-    .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 32px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
-    .status-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); padding: 6px 14px; border-radius: 9999px; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
-    .dot { width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; box-shadow: 0 0 10px #22c55e; }
-    h1 { margin: 0 0 10px 0; font-size: 24px; color: #ffffff; }
-    p { color: #94a3b8; line-height: 1.5; font-size: 15px; margin: 0 0 24px 0; }
-    .btn { display: inline-block; width: 100%; background: linear-gradient(135deg, #d97706, #b45309); color: #ffffff; font-weight: 700; text-decoration: none; padding: 14px 24px; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: all 0.15s ease; }
-    .btn:hover { background: linear-gradient(135deg, #f59e0b, #d97706); transform: translateY(-2px); }
-    .note { margin-top: 20px; font-size: 13px; color: #64748b; }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <div class="status-badge"><span class="dot"></span> Backend REST API Active</div>
-    <h1>AZHAGU Salon Platform</h1>
-    <p>The backend REST API server is running on <strong>Port 5050</strong>. The main Web Application runs on <strong>Port 3000</strong>.</p>
-    <a href="http://localhost:3000" class="btn">🚀 Open Web Application (Port 3000)</a>
-    <div class="note">Redirecting to Web Application in 2 seconds...</div>
-  </div>
-  <script>
-    setTimeout(function() {
-      window.location.href = "http://localhost:3000";
-    }, 2000);
-  </script>
-</body>
-</html>
-    `);
-  }
-
+app.get('/api/info', (req, res) => {
   res.json({
     status: 'ONLINE',
     service: 'Azhagu Salon Backend REST API',
-    message: 'Backend server is running operational.',
-    frontendUrl: 'http://localhost:3000',
-    apiHealthUrl: 'http://localhost:5050/api/health',
+    message: 'Backend server is operational.',
     timestamp: new Date().toISOString()
   });
 });
@@ -304,10 +268,7 @@ app.post('/api/appointments/cancel', (req, res) => {
   return res.json({ success: true });
 });
 
-// Serve compiled static assets from dist (Web Service deployment)
-const distPath = path.join(__dirname, '../dist');
-app.use(express.static(distPath));
-
+// SPA fallback for all client-side non-API routes
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api')) {
     return next();
