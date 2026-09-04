@@ -1,0 +1,216 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DB_FILE = path.join(__dirname, 'db.json');
+
+// Initial Master Seed Data
+const INITIAL_USERS = [
+  { id: 'user-cust-1', auth_user_id: 'auth-1', full_name: 'Guruprasath Sundaram', email: 'guruprasath@azhagu.demo', phone: '98409 88776', avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80', role: 'CUSTOMER', password: 'password123', status: 'ACTIVE', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'user-owner-1', auth_user_id: 'auth-2', full_name: 'Kavitha Ramasamy', email: 'kavitha@azhagu.demo', phone: '98401 23456', avatar_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80', role: 'SALON_OWNER', password: 'password123', status: 'ACTIVE', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'user-mgr-1', auth_user_id: 'auth-3', full_name: 'Senthil Nathan', email: 'senthil@azhagu.demo', phone: '94432 10987', avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80', role: 'SALON_MANAGER', password: 'password123', status: 'ACTIVE', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'user-admin-1', auth_user_id: 'auth-4', full_name: 'Praveen Kumar', email: 'admin@azhagu.demo', phone: '98410 00000', avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80', role: 'ADMIN', password: 'password123', status: 'ACTIVE', created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+];
+
+const INITIAL_CATEGORIES = [
+  { id: 'cat-bridal', name: 'Bridal Makeover & Saree Draping', slug: 'bridal-makeover', description: 'Traditional South Indian Muhurtham & Reception bridal styling', image_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80', is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'cat-hair', name: 'Hair Care & Hair Spa', slug: 'hair-care', description: 'Keratin treatments, herbal oil massage, and precision haircuts', image_url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80', is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'cat-skincare', name: 'Herbal Skincare & Facials', slug: 'skincare-facials', description: 'Golden glow facials, de-tan treatments, and organic skincare', image_url: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80', is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'cat-mehendi', name: 'Traditional Mehendi & Art', slug: 'mehendi-art', description: 'Intricate Arabic and bridal Mehendi designs', image_url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80', is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+];
+
+const INITIAL_SALONS = [
+  {
+    id: 'salon-1',
+    owner_id: 'user-owner-1',
+    name: 'Azhagu Muhurtham Bridal Studio & Saree Draping',
+    slug: 'azhagu-muhurtham-bridal-studio',
+    description: 'Chennai’s premier bridal makeover and traditional South Indian saree draping lounge.',
+    phone: '044 2434 8899',
+    email: 'info@azhagubridal.com',
+    address: '42, T. Nagar Main Road, Pondy Bazaar',
+    city: 'Chennai',
+    state: 'Tamil Nadu',
+    country: 'India',
+    postal_code: '600017',
+    latitude: 13.0418,
+    longitude: 80.2341,
+    logo_url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=200&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=1200&q=80',
+    status: 'ACTIVE',
+    rating: 4.9,
+    review_count: 148,
+    category_ids: ['cat-bridal', 'cat-skincare', 'cat-mehendi'],
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: 'salon-2',
+    owner_id: 'user-owner-1',
+    name: 'Vasanth & Co Luxury Men’s Grooming Lounge',
+    slug: 'vasanth-luxury-mens-grooming',
+    description: 'High-end men’s haircutting, beard sculpturing, and relaxing scalp oil treatments in Madurai.',
+    phone: '0452 234 5678',
+    email: 'contact@vasanthgrooming.com',
+    address: '15, KK Nagar 80 Feet Road',
+    city: 'Madurai',
+    state: 'Tamil Nadu',
+    country: 'India',
+    postal_code: '625020',
+    latitude: 9.9252,
+    longitude: 78.1198,
+    logo_url: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=200&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1200&q=80',
+    status: 'ACTIVE',
+    rating: 4.8,
+    review_count: 92,
+    category_ids: ['cat-hair'],
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }
+];
+
+const INITIAL_SERVICES = [
+  { id: 'srv-101', salon_id: 'salon-1', category_id: 'cat-bridal', name: 'HD Muhurtham Bridal Makeup & Saree Draping', description: 'Long-lasting HD waterproof bridal makeup, jewelry placement, and silk saree box pleating.', price: 12500, duration_minutes: 150, image_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=500&q=80', is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'srv-102', salon_id: 'salon-1', category_id: 'cat-skincare', name: '24K Gold Radiance Facial', description: 'Pure 24K gold foil facial for instant glow before weddings and traditional occasions.', price: 3500, duration_minutes: 75, image_url: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=500&q=80', is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'srv-103', salon_id: 'salon-1', category_id: 'cat-mehendi', name: 'Full Bridal Arabic Mehendi (Both Hands & Feet)', description: 'Intricate classic Mehendi design up to elbows and calves using 100% natural organic henna.', price: 4500, duration_minutes: 180, image_url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=500&q=80', is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'srv-201', salon_id: 'salon-2', category_id: 'cat-hair', name: 'Royal Executive Haircut & Beard Sculpting', description: 'Precision styling, hot towel shave, and beard shape up with herbal aftershave lotion.', price: 850, duration_minutes: 45, image_url: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=500&q=80', is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+];
+
+const INITIAL_STAFF = [
+  { id: 'stf-1', salon_id: 'salon-1', display_name: 'Ananya Ramesh', bio: 'Senior Bridal Makeup Artist with 8+ years of experience in HD bridal makeovers.', specialization: 'HD Bridal Makeup & Hair Styling', experience_years: 8, avatar_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80', is_active: true, service_ids: ['srv-101', 'srv-102'], rating: 4.9, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'stf-2', salon_id: 'salon-1', display_name: 'Deepika Sundar', bio: 'Specialist in silk saree box pleating, Kanchipuram saree draping, and jasmine flower tying.', specialization: 'Traditional Saree Draping & Mehendi', experience_years: 6, avatar_url: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80', is_active: true, service_ids: ['srv-101', 'srv-103'], rating: 4.95, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'stf-3', salon_id: 'salon-2', display_name: 'Karthik Subramanian', bio: 'Master barber specialized in modern fade haircuts and royal hot-towel beard shaping.', specialization: 'Gentlemen Hair Styling & Beard Art', experience_years: 10, avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80', is_active: true, service_ids: ['srv-201'], rating: 4.85, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+];
+
+const INITIAL_SALON_WORKING_HOURS = [
+  { id: 'sh-1-0', salon_id: 'salon-1', day_of_week: 0, open_time: '09:00', close_time: '20:00', is_closed: false },
+  { id: 'sh-1-1', salon_id: 'salon-1', day_of_week: 1, open_time: '09:00', close_time: '20:00', is_closed: false },
+  { id: 'sh-1-2', salon_id: 'salon-1', day_of_week: 2, open_time: '09:00', close_time: '20:00', is_closed: false },
+  { id: 'sh-1-3', salon_id: 'salon-1', day_of_week: 3, open_time: '09:00', close_time: '20:00', is_closed: false },
+  { id: 'sh-1-4', salon_id: 'salon-1', day_of_week: 4, open_time: '09:00', close_time: '20:00', is_closed: false },
+  { id: 'sh-1-5', salon_id: 'salon-1', day_of_week: 5, open_time: '09:00', close_time: '21:00', is_closed: false },
+  { id: 'sh-1-6', salon_id: 'salon-1', day_of_week: 6, open_time: '08:30', close_time: '21:00', is_closed: false },
+  ...['salon-2', 'salon-3', 'salon-4', 'salon-5', 'salon-6', 'salon-7', 'salon-8', 'salon-9', 'salon-10'].flatMap((salonId) =>
+    [0, 1, 2, 3, 4, 5, 6].map((dayIdx) => ({
+      id: `sh-${salonId}-${dayIdx}`,
+      salon_id: salonId,
+      day_of_week: dayIdx,
+      open_time: '08:30',
+      close_time: '21:00',
+      is_closed: false
+    }))
+  )
+];
+
+const INITIAL_STAFF_WORKING_HOURS = [
+  { id: 'sth-1-0', staff_id: 'stf-1', day_of_week: 0, start_time: '09:00', end_time: '19:00', is_available: true },
+  { id: 'sth-1-1', staff_id: 'stf-1', day_of_week: 1, start_time: '09:00', end_time: '19:00', is_available: true },
+  { id: 'sth-1-2', staff_id: 'stf-1', day_of_week: 2, start_time: '09:00', end_time: '19:00', is_available: true },
+  { id: 'sth-1-3', staff_id: 'stf-1', day_of_week: 3, start_time: '09:00', end_time: '19:00', is_available: true },
+  { id: 'sth-1-4', staff_id: 'stf-1', day_of_week: 4, start_time: '09:00', end_time: '19:00', is_available: true },
+  { id: 'sth-1-5', staff_id: 'stf-1', day_of_week: 5, start_time: '09:00', end_time: '20:00', is_available: true },
+  { id: 'sth-1-6', staff_id: 'stf-1', day_of_week: 6, start_time: '08:30', end_time: '20:00', is_available: true }
+];
+
+const INITIAL_APPOINTMENTS = [
+  {
+    id: 'appt-1001',
+    customer_id: 'user-cust-1',
+    salon_id: 'salon-1',
+    staff_id: 'stf-1',
+    service_id: 'srv-101',
+    appointment_date: '2026-09-10',
+    start_time: '10:00',
+    end_time: '12:30',
+    status: 'CONFIRMED',
+    notes: 'Please ensure gold bridal jewelry setting is ready.',
+    total_price: 12500,
+    customer_name: 'Guruprasath Sundaram',
+    customer_phone: '98409 88776',
+    customer_email: 'guruprasath@azhagu.demo',
+    service_name: 'HD Muhurtham Bridal Makeup & Saree Draping',
+    staff_name: 'Ananya Ramesh',
+    salon_name: 'Azhagu Muhurtham Bridal Studio & Saree Draping',
+    payment_method: 'PAY_AT_SALON',
+    payment_status: 'PAY_AT_SALON',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }
+];
+
+class DatabaseEngine {
+  constructor() {
+    this.data = {};
+    this.loadData();
+  }
+
+  loadData() {
+    try {
+      if (fs.existsSync(DB_FILE)) {
+        const raw = fs.readFileSync(DB_FILE, 'utf8');
+        this.data = JSON.parse(raw);
+      } else {
+        this.resetToSeed();
+      }
+    } catch (e) {
+      console.error('Error loading db.json, resetting to seed:', e);
+      this.resetToSeed();
+    }
+  }
+
+  saveData() {
+    try {
+      fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf8');
+    } catch (e) {
+      console.error('Error saving db.json:', e);
+    }
+  }
+
+  resetToSeed() {
+    this.data = {
+      users: INITIAL_USERS,
+      categories: INITIAL_CATEGORIES,
+      salons: INITIAL_SALONS,
+      services: INITIAL_SERVICES,
+      staff: INITIAL_STAFF,
+      salonHours: INITIAL_SALON_WORKING_HOURS,
+      staffHours: INITIAL_STAFF_WORKING_HOURS,
+      staffLeaves: [],
+      appointments: INITIAL_APPOINTMENTS,
+      reviews: [],
+      notifications: [],
+      auditLogs: []
+    };
+    this.saveData();
+  }
+
+  // Getters
+  getUsers() { return this.data.users || []; }
+  getCategories() { return this.data.categories || []; }
+  getSalons() { return this.data.salons || []; }
+  getServices() { return this.data.services || []; }
+  getStaff() { return this.data.staff || []; }
+  getSalonHours() { return this.data.salonHours || []; }
+  getStaffHours() { return this.data.staffHours || []; }
+  getStaffLeaves() { return this.data.staffLeaves || []; }
+  getAppointments() { return this.data.appointments || []; }
+  getReviews() { return this.data.reviews || []; }
+  getNotifications() { return this.data.notifications || []; }
+  getAuditLogs() { return this.data.auditLogs || []; }
+
+  // Setters
+  setUsers(users) { this.data.users = users; this.saveData(); }
+  setSalons(salons) { this.data.salons = salons; this.saveData(); }
+  setServices(services) { this.data.services = services; this.saveData(); }
+  setStaff(staff) { this.data.staff = staff; this.saveData(); }
+  setAppointments(appts) { this.data.appointments = appts; this.saveData(); }
+  setReviews(reviews) { this.data.reviews = reviews; this.saveData(); }
+  setStaffLeaves(leaves) { this.data.staffLeaves = leaves; this.saveData(); }
+  setNotifications(notifs) { this.data.notifications = notifs; this.saveData(); }
+  setAuditLogs(logs) { this.data.auditLogs = logs; this.saveData(); }
+}
+
+export const dbEngine = new DatabaseEngine();

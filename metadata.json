@@ -1,0 +1,8 @@
+{
+  "name": "AZHAGU - South India Salon & Bridal Booking Platform",
+  "description": "Premier South Indian salon discovery, traditional bridal styling, and appointment booking platform across Tamil Nadu and South India.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
